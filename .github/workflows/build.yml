@@ -6,7 +6,7 @@ on:
     inputs:
       XRAY_CORE_VERSION:
         description: 'Xray core version or commit hash'
-        required: false
+        required: true
         default: 'latest'  # Optional: Set a default version
 
 jobs:
