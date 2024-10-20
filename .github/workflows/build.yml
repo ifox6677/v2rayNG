@@ -7,7 +7,7 @@ on:
       XRAY_CORE_VERSION:
         description: 'Xray core version or commit hash'
         required: false
-
+        default: 'latest'  # Optional: Set a default version
 
 jobs:
   build:
@@ -26,35 +26,46 @@ jobs:
     - name: Setup Golang
       uses: actions/setup-go@v5
       with:
-        go-version: '1.22.2'
+        go-version: '1.23'
 
     - name: Install gomobile
       run: |
         go install golang.org/x/mobile/cmd/gomobile@latest
-        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH || echo "GOPATH is not set"
 
     - name: Setup Android environment
       uses: android-actions/setup-android@v3
-
+      with:
+        api-level: '30'  # Specify your required API level
+        build-tools: '30.0.3'  # Specify your required build tools version
+        ndk-version: '21.4.7075529'  # Specify a compatible NDK version
 
     - name: Build dependencies
       run: |
-        mkdir ${{ github.workspace }}/build
+        mkdir -p ${{ github.workspace }}/build
         cd ${{ github.workspace }}/build
         git clone --depth=1 -b main https://github.com/2dust/AndroidLibXrayLite.git
         cd AndroidLibXrayLite
         go get github.com/xtls/xray-core@${{ github.event.inputs.XRAY_CORE_VERSION }} || true
         gomobile init
         go mod tidy -v
-        gomobile bind -v -androidapi 21 -ldflags='-s -w' ./
+        gomobile bind -v -androidapi 21 -ldflags='-s -w' ./  # Changed API level to 21
+
+        # Ensure the target libs directory exists
+        mkdir -p ${{ github.workspace }}/V2rayNG/app/libs/
+        
+        # Copy the generated AAR files
         cp *.aar ${{ github.workspace }}/V2rayNG/app/libs/
 
     - name: Build APK
       run: |
         cd ${{ github.workspace }}/V2rayNG
+        ls -la  # List contents of the V2rayNG directory for debugging
         chmod 755 gradlew
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug || exit 1
+
+    - name: List APK output directory
+      run: ls -la ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/debug/
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
