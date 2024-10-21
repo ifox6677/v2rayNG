@@ -57,7 +57,7 @@ jobs:
         mkdir -p ${{ github.workspace }}/V2rayNG/app/libs/
         
         # Copy AAR files from the local directory to the target directory
-        cp /libs/*.aar ${{ github.workspace }}/V2rayNG/app/libs/
+        cp ./libs/*.aar ${{ github.workspace }}/V2rayNG/app/libs/
 
     - name: Build APK
       run: |
