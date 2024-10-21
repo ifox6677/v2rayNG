@@ -63,4 +63,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: xray
-        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/debug/v2rayNG_×_arm64-v8a.apk
+        path: ${{ github.workspace }}/V2rayNG/app/build/outputs/apk/debug/v2rayNG_*_arm64-v8a.apk
