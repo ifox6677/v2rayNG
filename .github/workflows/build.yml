@@ -51,11 +51,13 @@ jobs:
         go mod tidy -v
         gomobile bind -v -androidapi 21 -ldflags='-s -w' ./  # Changed API level to 21
 
+    - name: Copy AAR files from local directory
+      run: |
         # Ensure the target libs directory exists
         mkdir -p ${{ github.workspace }}/V2rayNG/app/libs/
         
-        # Copy the generated AAR files
-        cp *.aar ${{ github.workspace }}/V2rayNG/app/libs/
+        # Copy AAR files from the local directory to the target directory
+        cp /libs/*.aar ${{ github.workspace }}/V2rayNG/app/libs/
 
     - name: Build APK
       run: |
