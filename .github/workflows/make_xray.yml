@@ -2,7 +2,7 @@
 name: Build v2ray
 
 on:
-  push:
+  
   workflow_dispatch:
     inputs:
       XRAY_CORE_VERSION:
