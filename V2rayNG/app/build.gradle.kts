@@ -12,16 +12,13 @@ android {
         minSdk = 21
         targetSdk = 34
         versionCode = 602
-        versionName = "1.9.8"
+        versionName = "2.6.18"
         multiDexEnabled = true
         splits {
             abi {
                 isEnable = true
                 include(
-                    "arm64-v8a",
-                    "armeabi-v7a",
-                    "x86_64",
-                    "x86"
+                    "arm64-v8a"
                 )
                 isUniversalApk = true
             }
